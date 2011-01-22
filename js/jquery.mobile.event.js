@@ -63,18 +63,11 @@ $.event.special.tap = {
 			$this = $( thisObject );
 		
 		$this
-			.bind( "keypress", function( e ){
-				// if enter or space is pressed, trigger click
-				if( e.which == $.mobile.keyCode.ENTER || e.which == $.mobile.keyCode.SPACE ){
-					 $this.trigger( "tap" );
-					 return false;
-				}
-			})
 			.bind( "mousedown touchstart", function( event ) {
 				if ( event.which && event.which !== 1 ||
 					//check if event fired once already by a device that fires both mousedown and touchstart (while supporting both events)
 					$this.data( "prevEvent") && $this.data( "prevEvent") !== event.type ) {
-					return;
+					return false;
 				}
 				
 				//save event type so only this type is let through for a temp duration, 
