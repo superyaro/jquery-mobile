@@ -36,7 +36,7 @@ $.widget( "mobile.button", $.mobile.widget, {
 		
 		//add hidden input during submit
 		if( $el.attr('type') !== 'reset' ){
-			$el.click(function(){
+			$el.tap(function(){
 				var $buttonPlaceholder = $("<input>", 
 						{type: "hidden", name: $el.attr("name"), value: $el.attr("value")})
 						.insertBefore($el);

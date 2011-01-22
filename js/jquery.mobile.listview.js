@@ -97,22 +97,14 @@ $.widget( "mobile.listview", $.mobile.widget, {
 					}
 
 					return false;
-				break;
-
-				// if enter or space is pressed, trigger click
-				case 13:
-				case 32:
-					 target.trigger( "click" );
-
-					 return false;
 				break;	
 			}
 		});	
 
 		// tapping the whole LI triggers click on the first link
-		$list.delegate( "li", "click", function(event) {
+		$list.delegate( "li", "tap", function(event) {
 			if ( !$( event.target ).closest( "a" ).length ) {
-				$( this ).find( "a" ).first().trigger( "click" );
+				$( this ).find( "a" ).first().trigger( "tap" );
 				return false;
 			}
 		});

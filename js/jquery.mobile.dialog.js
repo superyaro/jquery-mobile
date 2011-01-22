@@ -22,7 +22,7 @@ $.widget( "mobile.dialog", $.mobile.widget, {
 					return;
 				}
 
-				if( e.type == "click" && ( $(e.target).closest('[data-back]')[0] || this==$closeBtn[0] ) ){
+				if( e.type == "tap" && ( $(e.target).closest('[data-back]')[0] || this==$closeBtn[0] ) ){
 					self.close();
 					return false;
 				}
@@ -33,7 +33,7 @@ $.widget( "mobile.dialog", $.mobile.widget, {
 
 		// NOTE avoid click handler in the case of an external resource
 		// TODO add function in navigation to handle external check
-		$el.delegate("a", "click", dialogClickHandler);
+		$el.delegate("a", "tap", dialogClickHandler);
 		$el.delegate("form", "submit", dialogClickHandler);
 
 		this.element

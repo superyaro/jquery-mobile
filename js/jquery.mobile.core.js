@@ -178,7 +178,7 @@
 		$window.trigger( "hashchange", [ true ] );
 
 		//remove rendering class
-		$html.removeClass('ui-mobile-rendering');
+		$html.removeClass('ui-mobile-rendering');	
 	});
 
 

@@ -163,39 +163,12 @@ $.widget( "mobile.selectmenu", $.mobile.widget, {
 
 		//button events
 		button
-			.bind( "touchstart" ,function( event ){
-				//set startTouches to cached copy of
-				$( this ).data( "startTouches", $.extend({}, event.originalEvent.touches[ 0 ]) );
-			})
-			.bind( $.support.touch ? "touchend" : "mouseup" , function( event ){
-				//if it's a scroll, don't open
-				if( $( this ).data( "moved" ) ){
-					$( this ).removeData( "moved" );
-				}
-				else{
-					self.open();
-				}
-				event.preventDefault();
-			})
-			.bind( "touchmove", function( event ){
-				//if touch moved enough, set data moved and don't open menu
-				var thisTouches = event.originalEvent.touches[ 0 ],
-					startTouches = $( this ).data( "startTouches" ),
-					deltaX = Math.abs(thisTouches.pageX - startTouches.pageX),
-					deltaY = Math.abs(thisTouches.pageY - startTouches.pageY);
-
-				if( deltaX > 10 || deltaY > 10 ){
-					$( this ).data( "moved", true );
-				}
+			.bind( "tap" ,function( event ){
+				self.open();
 			});
-
+			
 		//events for list items
-		list.delegate("li:not(.ui-disabled, .ui-li-divider)", "click", function(event){
-
-			// clicking on the list item fires click on the link in listview.js.
-			// to prevent this handler from firing twice if the link isn't clicked on,
-			// short circuit unless the target is the link
-			if( !$(event.target).is("a") ){ return; }
+		list.delegate("li:not(.ui-disabled, .ui-li-divider)", "tap", function(event){
 
 			// index of option tag to be selected
 			var newIndex = list.find( "li:not(.ui-li-divider)" ).index( this ),
@@ -212,7 +185,8 @@ $.widget( "mobile.selectmenu", $.mobile.widget, {
 					.toggleClass('ui-icon-checkbox-off', !option.selected);
 			}
 
-			// trigger change
+			// trigger change 
+			//TODO: this should only trigger if the value changed
 			select.trigger( "change" );
 
 			//hide custom select for single selects only
@@ -224,7 +198,7 @@ $.widget( "mobile.selectmenu", $.mobile.widget, {
 		});
 
 		//events on "screen" overlay + close button
-		screen.add( headerClose ).add( menuPageClose ).click(function(event){
+		screen.add( headerClose ).add( menuPageClose ).bind("touchstart mousedown",function(event){
 			self.close();
 			event.preventDefault();
 

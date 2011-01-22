@@ -124,7 +124,7 @@ $.widget( "mobile.slider", $.mobile.widget, {
 
 		// NOTE force focus on handle
 		this.handle
-			.bind($.support.touch ? "touchstart" : "mousedown", function(){
+			.bind( "tap", function(){
 				$(this).focus();
 			});
 

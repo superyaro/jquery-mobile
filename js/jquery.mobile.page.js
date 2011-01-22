@@ -79,7 +79,7 @@ $.widget( "mobile.page", $.mobile.widget, {
 						!leftbtn && $this.data( "backbtn" ) !== false ) {
 
 					$( "<a href='#' class='ui-btn-left' data-icon='arrow-l'>"+ o.backBtnText +"</a>" )
-						.click(function() {
+						.bind("tap", function() {
 							history.back();
 							return false;
 						})

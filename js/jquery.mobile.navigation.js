@@ -447,7 +447,7 @@
 
 
 	//click routing - direct to HTTP or Ajax, accordingly
-	$( "a" ).live( "click", function(event) {
+	$( "a" ).live( "click tap", function(event) {
 
 		if( !$.mobile.ajaxLinksEnabled ){ return; }
 		var $this = $(this),
