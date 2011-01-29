@@ -109,10 +109,10 @@ $.widget( "mobile.listview", $.mobile.widget, {
 			}
 		});	
 
-		// tapping the whole LI triggers click on the first link
-		$list.delegate( "li", "click", function(event) {
-			if ( !$( event.target ).closest( "a" ).length ) {
-				$( this ).find( "a" ).first().trigger( "click" );
+		// tapping the whole LI triggers tap and click on the first link
+		$list.bind( "tap", function( event, triggered ){
+			if( !triggered ){
+				$( event.target ).closest( "li" ).find( "a" ).first().trigger( "tap", [true] );
 				return false;
 			}
 		});

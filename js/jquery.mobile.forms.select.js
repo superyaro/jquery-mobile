@@ -192,71 +192,54 @@ $.widget( "mobile.selectmenu", $.mobile.widget, {
 				});
 
 			//button events
-			button
-				.bind( "touchstart" , function( event ){
-					//set startTouches to cached copy of
-					$( this ).data( "startTouches", $.extend({}, event.originalEvent.touches[ 0 ]) );
-				})
-				.bind( $.support.touch ? "touchend" : "mouseup" , function( event ){
-					//if it's a scroll, don't open
-					if( $( this ).data( "moved" ) ){
-						$( this ).removeData( "moved" );
-					} else {
-						self.open();
-					}
-					event.preventDefault();
-				})
-				.bind( "touchmove", function( event ){
-					//if touch moved enough, set data moved and don't open menu
-					var thisTouches = event.originalEvent.touches[ 0 ],
-					startTouches = $( this ).data( "startTouches" ),
-					deltaX = Math.abs(thisTouches.pageX - startTouches.pageX),
-					deltaY = Math.abs(thisTouches.pageY - startTouches.pageY);
-
-					if( deltaX > 10 || deltaY > 10 ){
-						$( this ).data( "moved", true );
-					}
-				});
+			button.bind({
+				"tap": function( e ){
+					self.open();
+					e.preventDefault();
+				}
+			})
 		}
 
 		//events for list items
-		list.delegate("li:not(.ui-disabled, .ui-li-divider)", "click", function(event){
-			// clicking on the list item fires click on the link in listview.js.
-			// to prevent this handler from firing twice if the link isn't clicked on,
-			// short circuit unless the target is the link
-			if( !$(event.target).is("a") ){ return; }
-
-			// index of option tag to be selected
-			var newIndex = list.find( "li:not(.ui-li-divider)" ).index( this ),
-				option = self.optionElems.eq( newIndex )[0];
-
-			// toggle selected status on the tag for multi selects
-			option.selected = isMultiple ? !option.selected : true;
-
-			// toggle checkbox class for multiple selects
-			if( isMultiple ){
-				$(this)
-					.find('.ui-icon')
-					.toggleClass('ui-icon-checkbox-on', option.selected)
-					.toggleClass('ui-icon-checkbox-off', !option.selected);
-			}
-
-			// trigger change
-			select.trigger( "change" );
-
-			//hide custom select for single selects only
-			if( !isMultiple ){
-				self.close();
-			}
-
-			event.preventDefault();
-		});
+		list
+			.delegate("li:not(.ui-disabled, .ui-li-divider)", "tap", function( e ){
+				// clicking on the list item fires click on the link in listview.js.
+				// to prevent this handler from firing twice if the link isn't clicked on,
+				// short circuit unless the target is the link
+				if( !$( e.target ).is("a") ){ return; }
+	
+				// index of option tag to be selected
+				var newIndex = list.find( "li:not(.ui-li-divider)" ).index( this ),
+					option = self.optionElems.eq( newIndex )[0];
+	
+				// toggle selected status on the tag for multi selects
+				option.selected = isMultiple ? !option.selected : true;
+	
+				// toggle checkbox class for multiple selects
+				if( isMultiple ){
+					$(this)
+						.find('.ui-icon')
+						.toggleClass('ui-icon-checkbox-on', option.selected)
+						.toggleClass('ui-icon-checkbox-off', !option.selected);
+				}
+	
+				// trigger change
+				select.trigger( "change" );
+	
+				//hide custom select for single selects only
+				if( !isMultiple ){
+					self.close();
+				}
+	
+				return false;
+			})
+			.bind( "click", false);
 
 		//events on "screen" overlay + close button
 		screen
 			.add( headerClose )
 			.add( menuPageClose )
-			.bind("click", function(event){
+			.bind("tap", function(event){
 				self.close();
 				event.preventDefault();
 

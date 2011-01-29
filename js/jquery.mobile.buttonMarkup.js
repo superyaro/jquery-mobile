@@ -83,11 +83,11 @@ $.fn.buttonMarkup.defaults = {
 
 var attachEvents = function() {
 	$(".ui-btn:not(.ui-disabled)").live({
-		mousedown: function() {
+		"touchstart mousedown": function() {
 			var theme = $(this).attr( "data-theme" );
 			$(this).removeClass( "ui-btn-up-" + theme ).addClass( "ui-btn-down-" + theme );
 		},
-		mouseup: function() {
+		"touchend mouseup tap": function() {
 			var theme = $(this).attr( "data-theme" );
 			$(this).removeClass( "ui-btn-down-" + theme ).addClass( "ui-btn-up-" + theme );
 		},
@@ -95,7 +95,7 @@ var attachEvents = function() {
 			var theme = $(this).attr( "data-theme" );
 			$(this).removeClass( "ui-btn-up-" + theme ).addClass( "ui-btn-hover-" + theme );
 		},
-		"mouseout blur": function() {
+		"mouseout touchend blur": function() {
 			var theme = $(this).attr( "data-theme" );
 			$(this).removeClass( "ui-btn-hover-" + theme ).addClass( "ui-btn-up-" + theme );
 		}

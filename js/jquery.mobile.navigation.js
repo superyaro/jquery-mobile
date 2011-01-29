@@ -575,68 +575,76 @@
 
 
 	//click routing - direct to HTTP or Ajax, accordingly
-	$( "a" ).live( "click", function(event) {
-		
-		var $this = $(this),
-			//get href, remove same-domain protocol and host
-			url = path.clean( $this.attr( "href" ) ),
-			
-			//check if it's external
-			isExternal = path.isExternal( url ) || $this.is( "[rel='external']" ),
-			
-			//if target attr is specified we mimic _blank... for now
-			hasTarget = $this.is( "[target]" );
-		
-		//if there's a data-rel=back attr, go back in history
-		if( $this.is( "[data-rel='back']" ) ){
-			window.history.back();
-			return false;
-		}	
-
-		if( url === "#" ){
-			//for links created purely for interaction - ignore
-			return false;
-		}
-
-		$activeClickedLink = $this.closest( ".ui-btn" ).addClass( $.mobile.activeBtnClass );
-
-		if( isExternal || hasTarget || !$.mobile.ajaxEnabled ||
-			// TODO: deprecated - remove at 1.0
-			!$.mobile.ajaxLinksEnabled ){
-			//remove active link class if external (then it won't be there if you come back)
-			removeActiveLinkClass(true);
-
-			//deliberately redirect, in case click was triggered
-			if( hasTarget ){
-				window.open( url );
-			}
-			else{
-				location.href = url;
-			}
-		}
-		else {
-			//use ajax
-			var transition = $this.data( "transition" ),
-				direction = $this.data("direction"),
-				reverse = direction && direction == "reverse" || 
-				// deprecated - remove by 1.0
-				$this.data( "back" );
+	$(document)
+		.tap( function( event ) {	
+			var $this = $( event.target ).closest( "a" ),
+				//get href, remove same-domain protocol and host
+				url = path.clean( $this.attr( "href" ) ),
 				
-			//this may need to be more specific as we use data-rel more	
-			nextPageRole = $this.attr( "data-rel" );
+				//check if it's external
+				isExternal = path.isExternal( url ) || $this.is( "[rel='external']" ),
+				
+				//if target attr is specified we mimic _blank... for now
+				hasTarget = $this.is( "[target]" ),
+				
+				//ajax disabled
+				ajaxDisabled = !$.mobile.ajaxEnabled ||
+				// TODO: deprecated - remove at 1.0
+				!$.mobile.ajaxLinksEnabled ||
+				$this.is( "[data-ajax='false']" );
 
-			//if it's a relative href, prefix href with base url
-			if( path.isRelative( url ) ){
-				url = path.makeAbsolute( url );
+			//if there's a data-rel=back attr, go back in history
+			if( $this.is( "[data-rel='back']" ) ){
+				window.history.back();
+				return false;
+			}	
+	
+			if( url === "#" ){
+				//for links created purely for interaction - ignore
+				return false;
 			}
-
-			url = path.stripHash( url );
-
-			$.mobile.changePage( url, transition, reverse);
-		}
-		event.preventDefault();
-	});
-
+	
+			$activeClickedLink = $this.closest( ".ui-btn" ).addClass( $.mobile.activeBtnClass );
+	
+			if( isExternal || hasTarget || ajaxDisabled ){
+	
+				//remove active link class if external (then it won't be there if you come back)
+				removeActiveLinkClass(true);
+	
+				//deliberately redirect, in case click was triggered
+				if( hasTarget ){
+					window.open( url );
+				}
+				else{
+					location.href = url;
+				}
+			}
+			else {
+				//use ajax
+				var transition = $this.data( "transition" ),
+					direction = $this.data("direction"),
+					reverse = direction && direction == "reverse" || 
+					// deprecated - remove by 1.0
+					$this.data( "back" );
+					
+				//this may need to be more specific as we use data-rel more	
+				nextPageRole = $this.attr( "data-rel" );
+	
+				//if it's a relative href, prefix href with base url
+				if( path.isRelative( url ) ){
+					url = path.makeAbsolute( url );
+				}
+	
+				url = path.stripHash( url );
+	
+				$.mobile.changePage( url, transition, reverse);
+			}
+			event.preventDefault();
+		})
+		.click( function( event ){
+			return $( event.target ).is("not:a") ||  $( event.target ).is( "[data-ajax='false']" );
+		});
+	
 
 
 	//hashchange event handler
